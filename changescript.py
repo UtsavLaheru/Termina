@@ -2,6 +2,31 @@ import json
 import os
 from time import sleep
 import random
+import tkinter as tk
+from tkinter import filedialog
+
+root = tk.Tk()
+label = tk.Label(root, text="Testing The Terminal Customization GUI")
+label.pack()
+
+
+root.mainloop()   
+
+with open("store.json") as f:
+    data = json.load(f)
+
+if (data["folder"] == ""):
+    print("folder is empty")
+    folder = filedialog.askdirectory()
+    print("selected folder:",folder)
+    data["folder"] = folder
+    with open("store.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+# "If You Enter Nothing You'll Get Nothing"
+#                          -somebody(probably)
+
+
 
 def slideshow():
     value = int(input("Enter The Wallpaper To Start:"))
@@ -48,10 +73,15 @@ with open(settings_path) as f:
 choice = int(input("Enter '1' For SlideShow or '2' For Opening Terminal with a Random Wallpaper :"))
 
 
-if (choice == 1):
-    slideshow()
-if (choice == 2):
-    rand_popup_background()
+match(choice):
+    case 1:
+        slideshow()
+    case 2:
+        rand_popup_background()
+    case _:
+        print("You Have Enterned A Wrong Choice >v<")
+    
 #TASKS:
+#Understand More About tkinter and make a Folder/File Selector.
 # Now Make a Program when you open the terminal the wallpaper changes.
 # There settings.json file is not being recogined. (x)
