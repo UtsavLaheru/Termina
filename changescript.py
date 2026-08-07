@@ -36,9 +36,9 @@ def slideshow():
     wait = int(input("Enter The Wait Time (in seconds):"))
 
     for i in range(0, end):
-        value += 1
         data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}.jpg".format(value)
         print(data["profiles"]["list"][1]["backgroundImage"])
+        value += 1
         with open(settings_path, "w") as f:
             json.dump(data, f, indent=4)
         sleep(wait)
