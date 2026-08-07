@@ -13,20 +13,22 @@ label.pack()
 root.mainloop()   
 
 with open("store.json") as f:
-    data = json.load(f)
+    data2 = json.load(f)
 
-if (data["folder"] == ""):
+if (data2["folder"] == ""):
     print("folder is empty")
     folder = filedialog.askdirectory()
+    folder = folder.replace("/", "\\")
     print("selected folder:",folder)
-    data["folder"] = folder
+    data2["folder"] = folder
     with open("store.json", "w") as f:
-        json.dump(data, f, indent=4)
+        json.dump(data2, f, indent=4)
 
 # "If You Enter Nothing You'll Get Nothing"
 #                          -somebody(probably)
 
-
+# def CheckingStoredData():
+#     with open("store")
 
 def slideshow():
     value = int(input("Enter The Wallpaper To Start:"))
@@ -35,7 +37,7 @@ def slideshow():
 
     for i in range(0, end):
         value += 1
-        data["profiles"]["list"][1]["backgroundImage"] = "D:\\Wallpapaer\\{}.jpg".format(value)
+        data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}.jpg".format(value)
         print(data["profiles"]["list"][1]["backgroundImage"])
         with open(settings_path, "w") as f:
             json.dump(data, f, indent=4)
@@ -44,7 +46,7 @@ def slideshow():
 def rand_popup_background():
     import subprocess
     random_value = random.randint(1, 25)
-    data["profiles"]["list"][1]["backgroundImage"] = "D:\\Wallpapaer\\{}.jpg".format(random_value)
+    data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}.jpg".format(random_value)
     print(data["profiles"]["list"][1]["backgroundImage"])
     with open(settings_path, "w") as f:
         json.dump(data, f, indent=4)
