@@ -119,9 +119,11 @@ match(choice):
         print("You Have Enterned A Wrong Choice >v<")
     
 #TASKS:
-#Understand More About tkinter and make a Folder/File Selector.
+# Add Reset json Key or action For store.json.
+# Understand about Textual for TUI.
+# Understand More About tkinter and make a Folder/File Selector.
 # Now Make a Program when you open the terminal the wallpaper changes.
 # There settings.json file is not being recogined. (x)
 
 #OPTIONAL:
-#We Can Add File Explorer like Sorting
+# We Can Add File Explorer like Sorting
