@@ -5,12 +5,11 @@ import random
 import tkinter as tk
 from tkinter import filedialog
 
-root = tk.Tk()
-label = tk.Label(root, text="Testing The Terminal Customization GUI")
-label.pack()
+# root = tk.Tk()
+# label = tk.Label(root, text="Testing The Terminal Customization GUI")
+# label.pack()
 
-
-root.mainloop()
+# root.mainloop()
 
 with open("store.json") as f:
     data2 = json.load(f)
@@ -66,8 +65,17 @@ fileName.sort(key=lambda f: (len(f), f))   #Need Some More Test or Understanding
 for i in fileName:
     print("filename:", i)
 
+def reset_json():
+    data2["folder"] = ""
+    data2["value"] = ""
+    data2["end"] = ""
+    data2["wait"] = ""
+    with open("store.json", "w") as f:
+        json.dump(data2, f, indent=4)
+    print("store.json is reseted successfully")
+
 def slideshow():
-    value = data2["value"]
+    value = data2["value"]-1
     end = data2["end"]
     wait = data2["wait"]
     for i in range(0, end):
@@ -85,13 +93,10 @@ def rand_popup_background():
     print(data["profiles"]["list"][1]["backgroundImage"])
     with open(settings_path, "w") as f:
         json.dump(data, f, indent=4)
-    subprocess.Popen(["wt.exe"])  
-
-        
+    subprocess.Popen(["wt.exe"])
 
 #Main Function
 appdata_path = os.getenv("LOCALAPPDATA")
-
 # print(appdata_path)
 
 #Setting.json location Path
@@ -105,12 +110,14 @@ settings_path = os.path.join(
 
 
 with open(settings_path) as f:
-    data = json.load(f)    
-
+    data = json.load(f)
+print("To Reset stored values Enter 0,")
 choice = int(input("Enter '1' For SlideShow or '2' For Opening Terminal with a Random Wallpaper :"))
 
 
 match(choice):
+    case 0:
+        reset_json()
     case 1:
         slideshow()
     case 2:
@@ -119,11 +126,11 @@ match(choice):
         print("You Have Enterned A Wrong Choice >v<")
     
 #TASKS:
-# Add Reset json Key or action For store.json.
 # Understand about Textual for TUI.
 # Understand More About tkinter and make a Folder/File Selector.
 # Now Make a Program when you open the terminal the wallpaper changes.
 # There settings.json file is not being recogined. (x)
+# Add Reset json Key or action For store.json. (x)
 
 #OPTIONAL:
 # We Can Add File Explorer like Sorting
