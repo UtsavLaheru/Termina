@@ -29,7 +29,7 @@ if (data2["value"] == "" or data2["end"] == "" or data2["wait"] == "" or data2["
     if (data2["value"] == ""):
         print("value is not set or missing")
         value = int(input("Enter The Starting Wallpaper:"))
-        data2["value"] = value
+        data2["value"] = value-1
 
     if (data2["end"] == ""):
         print("end is not set or missing")
@@ -62,8 +62,8 @@ fileName = [
 ]
 # print(type(fileName))
 fileName.sort(key=lambda f: (len(f), f))   #Need Some More Test or Understanding.
-for i in fileName:
-    print("filename:", i)
+# for i in fileName:
+    # print("filename:", i)
 
 def reset_json():
     data2["folder"] = ""
@@ -75,7 +75,7 @@ def reset_json():
     print("store.json is reseted successfully")
 
 def slideshow():
-    value = data2["value"]-1
+    value = data2["value"]
     end = data2["end"]
     wait = data2["wait"]
     for i in range(0, end):
@@ -88,13 +88,23 @@ def slideshow():
 
 def rand_popup_background():
     import subprocess
-    random_value = random.randint(1, 25)   #Currently Working..
-    data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}.jpg".format(random_value)
+    random_value = random.randint(data2["value"], data2["end"])   #Currently Working..
+    data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
     print(data["profiles"]["list"][1]["backgroundImage"])
     with open(settings_path, "w") as f:
         json.dump(data, f, indent=4)
     subprocess.Popen(["wt.exe"])
 
+def rand_when_opend_background():
+    import psutil
+    for p in psutil.process_iter(["name"]):
+        if(p.info["name"] == "WindowsTerminal.exe"):
+            random_value = random.randint(data2["value"], data2["end"])   #Currently Working..
+            data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
+            print(data["profiles"]["list"][1]["backgroundImage"])
+            with open(settings_path, "w") as f:
+                json.dump(data, f, indent=4)
+    
 #Main Function
 appdata_path = os.getenv("LOCALAPPDATA")
 # print(appdata_path)
@@ -111,9 +121,9 @@ settings_path = os.path.join(
 
 with open(settings_path) as f:
     data = json.load(f)
-print("To Reset stored values Enter 0,")
-choice = int(input("Enter '1' For SlideShow or '2' For Opening Terminal with a Random Wallpaper :"))
 
+print("To Reset stored values Enter 0,")
+choice = int(input("Enter '1' For SlideShow or '2' For Random Wallpaper :"))
 
 match(choice):
     case 0:
@@ -121,7 +131,12 @@ match(choice):
     case 1:
         slideshow()
     case 2:
-        rand_popup_background()
+        choiceForRand = int(input("Enter '1' For Opening Terminal with a Random Wallpaper or '2' For Random Background every Time You Open Terminal:"))
+        match(choiceForRand):
+            case 1:
+                rand_popup_background()
+            case 2:
+                rand_when_opend_background()
     case _:
         print("You Have Enterned A Wrong Choice >v<")
     
