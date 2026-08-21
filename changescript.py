@@ -16,7 +16,7 @@ with open("store.json") as f:
 
 #Check If There is a Null or Not Setted-Up Values
 if (data2["value"] == "" or data2["end"] == "" or data2["wait"] == "" or data2["folder"] == ""):
-
+    
     if (data2["folder"] == ""):
         print("folder is empty")
         folder = filedialog.askdirectory()
@@ -86,9 +86,11 @@ def slideshow():
             json.dump(data, f, indent=4)
         sleep(wait)
 
+# def RepeatedSlideShow():  #Currently Working...
+
 def rand_popup_background():
     import subprocess
-    random_value = random.randint(data2["value"], data2["end"])   #Currently Working..
+    random_value = random.randint(data2["value"], data2["end"]-1)
     data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
     print(data["profiles"]["list"][1]["backgroundImage"])
     with open(settings_path, "w") as f:
@@ -97,13 +99,33 @@ def rand_popup_background():
 
 def rand_when_opend_background():
     import psutil
-    for p in psutil.process_iter(["name"]):
-        if(p.info["name"] == "WindowsTerminal.exe"):
-            random_value = random.randint(data2["value"], data2["end"])   #Currently Working..
-            data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
-            print(data["profiles"]["list"][1]["backgroundImage"])
-            with open(settings_path, "w") as f:
-                json.dump(data, f, indent=4)
+    old_count = 0
+    new_count = 0
+    passes = 1
+    try:
+        print("Monitoring For New Terminal Opened To Stop Press Ctrl+c")
+        while True:
+            new_count = 0
+            for p in psutil.process_iter(["name"]):
+                if(p.info["name"] == "OpenConsole.exe"):
+                    if(passes == 1):
+                        old_count += 1
+                    else:
+                        new_count += 1 
+            if(new_count > old_count):
+                print("New Console Opened")
+                random_value = random.randint(data2["value"], data2["end"]-1)
+                data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
+                print(data["profiles"]["list"][1]["backgroundImage"])
+                with open(settings_path, "w") as f:
+                    json.dump(data, f, indent=4)
+                #It is For safety (So we don't get stuck in infinit Loop).
+                # return False
+            if(passes != 1):
+                old_count = new_count
+            passes = 2
+    except KeyboardInterrupt:
+        print("Monitoring Ended")
     
 #Main Function
 appdata_path = os.getenv("LOCALAPPDATA")
@@ -117,7 +139,6 @@ settings_path = os.path.join(
     "LocalState",
     "settings.json"
 )
-
 
 with open(settings_path) as f:
     data = json.load(f)
@@ -143,7 +164,7 @@ match(choice):
 #TASKS:
 # Understand about Textual for TUI.
 # Understand More About tkinter and make a Folder/File Selector.
-# Now Make a Program when you open the terminal the wallpaper changes.
+# Now Make a Program when you open the terminal the wallpaper changes. (x)
 # There settings.json file is not being recogined. (x)
 # Add Reset json Key or action For store.json. (x)
 
