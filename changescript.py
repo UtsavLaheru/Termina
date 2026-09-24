@@ -5,12 +5,6 @@ import random
 import tkinter as tk
 from tkinter import filedialog
 
-# root = tk.Tk()
-# label = tk.Label(root, text="Testing The Terminal Customization GUI")
-# label.pack()
-
-# root.mainloop()
-
 with open("store.json") as f:
     data2 = json.load(f)
 
@@ -78,7 +72,7 @@ def slideshow():
     value = data2["value"]
     end = data2["end"]
     wait = data2["wait"]
-    for i in range(0, end):
+    for i in range(0, end-1):
         data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[value])
         print(data["profiles"]["list"][1]["backgroundImage"])
         value += 1
@@ -143,27 +137,36 @@ settings_path = os.path.join(
 with open(settings_path) as f:
     data = json.load(f)
 
-print("To Reset stored values Enter 0,")
+print("To Reset stored values Enter 0, And For Quitting Enter 3.")
 choice = int(input("Enter '1' For SlideShow or '2' For Random Wallpaper :"))
-
-match(choice):
-    case 0:
-        reset_json()
-    case 1:
-        slideshow()
-    case 2:
-        choiceForRand = int(input("Enter '1' For Opening Terminal with a Random Wallpaper or '2' For Random Background every Time You Open Terminal:"))
-        match(choiceForRand):
-            case 1:
-                rand_popup_background()
-            case 2:
-                rand_when_opend_background()
-    case _:
-        print("You Have Enterned A Wrong Choice >v<")
+while(choice != 3):
+    match(choice):
+        case 0:
+            reset_json()
+            break
+        case 1:
+            slideshow()
+            break
+        case 2:
+            choiceForRand = int(input("Enter '1' For Opening Terminal with a Random Wallpaper or '2' For Random Background every Time You Open Terminal:"))
+            match(choiceForRand):
+                case 1:
+                    rand_popup_background()
+                    break
+                case 2:
+                    rand_when_opend_background()
+                    break
+            break
+        case 3:
+            print("Quitting")
+            break
+        case _:
+            print("You Have Enterned A Wrong Choice >v<")
+            break
     
 #TASKS:
 # Understand about Textual for TUI.
-# Understand More About tkinter and make a Folder/File Selector.
+# Understand More About tkinter and make a Folder/File Selector. (x)
 # Now Make a Program when you open the terminal the wallpaper changes. (x)
 # There settings.json file is not being recogined. (x)
 # Add Reset json Key or action For store.json. (x)
