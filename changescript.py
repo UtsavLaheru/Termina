@@ -2,8 +2,8 @@ import json
 import os
 from time import sleep
 import random
-import tkinter as tk
 from tkinter import filedialog
+# import tkinter as tk
 
 with open("store.json") as f:
     data2 = json.load(f)
@@ -54,7 +54,6 @@ fileName = [
     f for f in os.listdir(data2["folder"])
     if os.path.isfile(os.path.join(data2["folder"], f))
 ]
-# print(type(fileName))
 fileName.sort(key=lambda f: (len(f), f))   #Need Some More Test or Understanding.
 # for i in fileName:
     # print("filename:", i)
@@ -68,19 +67,30 @@ def reset_json():
         json.dump(data2, f, indent=4)
     print("store.json is reseted successfully")
 
-def slideshow():
+def slideshow(repeated: bool):
     value = data2["value"]
     end = data2["end"]
     wait = data2["wait"]
-    for i in range(0, end-1):
+    for i in range(0, end):
         data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[value])
         print(data["profiles"]["list"][1]["backgroundImage"])
         value += 1
         with open(settings_path, "w") as f:
             json.dump(data, f, indent=4)
-        sleep(wait)
 
-# def RepeatedSlideShow():  #Currently Working...
+        #This Check Can Be Improved.
+        if i != end-1 and not repeated:
+            sleep(wait)
+        elif repeated:
+            sleep(wait)
+
+def RepeatedSlideShow():
+    try:
+        print("Starting Repeated SlideShow, To Stop Repeated/Looped SlideShow Press Ctrl+c")
+        while True:
+            slideshow(True)
+    except KeyboardInterrupt:
+        print("Repeated SlideShow Ended")
 
 def rand_popup_background():
     import subprocess
@@ -127,7 +137,7 @@ appdata_path = os.getenv("LOCALAPPDATA")
 
 #Setting.json location Path
 settings_path = os.path.join(
-    appdata_path,
+    f"{appdata_path}",
     "Packages",
     "Microsoft.WindowsTerminal_8wekyb3d8bbwe",
     "LocalState",
@@ -137,39 +147,54 @@ settings_path = os.path.join(
 with open(settings_path) as f:
     data = json.load(f)
 
-print("To Reset stored values Enter 0, And For Quitting Enter 3.")
-choice = int(input("Enter '1' For SlideShow or '2' For Random Wallpaper :"))
+choice: int = 0
 while(choice != 3):
+    print("To Reset stored values Enter 0, And For Quitting Enter 3.")
+    choice = int(input("Enter '1' For SlideShow or '2' For Random Wallpaper :"))
     match(choice):
         case 0:
             reset_json()
             break
         case 1:
-            slideshow()
-            break
+            choiceForSlide = int(input("Enter '1' if You Want The Slide To End Or '2' Repeat/Loop The Slide When The Slide Reaches End:"))
+            match(choiceForSlide):
+                case 1:
+                    slideshow(False)
+                    continue
+                case 2:
+                    RepeatedSlideShow()
+                    continue
+                case _:
+                    print("Wrong Input Choice ^w^")
+                    continue
         case 2:
             choiceForRand = int(input("Enter '1' For Opening Terminal with a Random Wallpaper or '2' For Random Background every Time You Open Terminal:"))
             match(choiceForRand):
                 case 1:
                     rand_popup_background()
-                    break
+                    continue
                 case 2:
                     rand_when_opend_background()
-                    break
-            break
+                    continue
+                case _:
+                    print("Wrong Input Choice -_-")
+                    continue
         case 3:
-            print("Quitting")
+            print("Quitting :3")
             break
         case _:
             print("You Have Enterned A Wrong Choice >v<")
-            break
-    
+            continue
 #TASKS:
+# Add LoopedSlideShow or RepeatedSlideShow.
 # Understand about Textual for TUI.
+
+#OPTIONAL:
+# We Can Add File Explorer like Sorting
+
+#Done Tasks:
+# Make The Program Recursive or Don't Exit When A Task Is Done. (i.e. Slideshow, RandomSlide) (x)
 # Understand More About tkinter and make a Folder/File Selector. (x)
 # Now Make a Program when you open the terminal the wallpaper changes. (x)
 # There settings.json file is not being recogined. (x)
 # Add Reset json Key or action For store.json. (x)
-
-#OPTIONAL:
-# We Can Add File Explorer like Sorting
