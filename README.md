@@ -1,7 +1,8 @@
 # Termina
 A Background Slideshow And Other Background Customization Script For Windows Terminal.
 
-**Important Instructions:**
+**Important Instructions Before Installtion:**
+
 Duplicate or Backup Your setting.json File From Windows Terminal.
 (So, Your Preference Data Can Be Saved For Easier Retrun To Normal or Prefered Setting Before The Termina Script Changes.) 
 
