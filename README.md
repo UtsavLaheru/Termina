@@ -28,7 +28,7 @@ Unpackged / Portable Release Path:
 ```
 
 ## Future Goals:
- - TUI Mode For Advance Customization and Easy Use.
++ [ ] TUI Mode For Advance Customization and Easy Use.
 
 ### NOTE: It is still In DEVELOPMENT PHASE
 
