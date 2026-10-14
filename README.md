@@ -3,9 +3,10 @@ A Background Slideshow And Other Background Customization Script For Windows Ter
 
 #### New: Alpha Available For Testing the Software (For now it Only Support's Terminal Text Interface).
 
-**Important Instructions Before Installtion:**
+> [!IMPORTANT]
+> **Instructions Before Installtion:**
+> Duplicate or Backup Your setting.json File From Windows Terminal.
 
-Duplicate or Backup Your setting.json File From Windows Terminal.
 (So, Your Preference Data Can Be Saved For Easier Retrun To Normal or Prefered Setting Before The Termina Script Changes.) 
 
 Setting.json Paths:-
