@@ -1,8 +1,10 @@
 import json
 import os
+from sys import monitoring
 from time import sleep
 import random
 from tkinter import filedialog
+import keyboard
 # import tkinter as tk
 
 with open("store.json") as f:
@@ -85,13 +87,22 @@ def slideshow(repeated: bool):
             sleep(wait)
 
 def RepeatedSlideShow():
-    try:
-        print("Starting Repeated SlideShow, To Stop Repeated/Looped SlideShow Press Ctrl+c")
-        while True:
+    print("Starting Repeated SlideShow, To Stop Repeated/Looped SlideShow Press Ctrl+c")
+    Monitoring: bool = True
+    while Monitoring:
+        try:
             slideshow(True)
-    except KeyboardInterrupt:
-        print("Repeated SlideShow Ended")
-
+        except KeyboardInterrupt:
+            if keyboard.is_pressed('ctrl'):
+                if keyboard.is_pressed('c'):
+                    print("Repeated SlideShow Ended")
+                    Monitoring = False
+                    #This is Working on Hope & Dreams Of Sleep (T-T).
+                    try:
+                        sleep(0.1)
+                    except KeyboardInterrupt:
+                        sleep(0.1)
+        
 def rand_popup_background():
     import subprocess
     random_value = random.randint(data2["value"], data2["end"]-1)
@@ -106,31 +117,38 @@ def rand_when_opend_background():
     old_count = 0
     new_count = 0
     passes = 1
-    try:
-        print("Monitoring For New Terminal Opened To Stop Press Ctrl+c")
-        while True:
-            new_count = 0
-            for p in psutil.process_iter(["name"]):
-                if(p.info["name"] == "OpenConsole.exe"):
-                    if(passes == 1):
-                        old_count += 1
-                    else:
-                        new_count += 1 
-            if(new_count > old_count):
-                print("New Console Opened")
-                random_value = random.randint(data2["value"], data2["end"]-1)
-                data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
-                print(data["profiles"]["list"][1]["backgroundImage"])
-                with open(settings_path, "w") as f:
-                    json.dump(data, f, indent=4)
-                #It is For safety (So we don't get stuck in infinit Loop).
-                # return False
-            if(passes != 1):
-                old_count = new_count
-            passes = 2
-    except KeyboardInterrupt:
-        print("Monitoring Ended")
-    
+    print("Monitoring For New Terminal Opened To Stop Press Ctrl+c")
+    Monitoring: bool = True
+    while Monitoring:
+        new_count = 0
+        for p in psutil.process_iter(["name"]):
+            if(p.info["name"] == "OpenConsole.exe"):
+                if(passes == 1):
+                    old_count += 1
+                else:
+                    new_count += 1 
+        if(new_count > old_count):
+            print("New Console Opened")
+            random_value = random.randint(data2["value"], data2["end"]-1)
+            data["profiles"]["list"][1]["backgroundImage"] = data2["folder"]+"\\{}".format(fileName[random_value])
+            print(data["profiles"]["list"][1]["backgroundImage"])
+            with open(settings_path, "w") as f:
+                json.dump(data, f, indent=4)
+            #It is For safety (So we don't get stuck in infinit Loop).
+            # return False
+        if(passes != 1):
+            old_count = new_count
+        passes = 2
+        if keyboard.is_pressed('ctrl'):
+            if keyboard.is_pressed('c'):
+                print("Monitoring Ended")
+                Monitoring = False
+                #This is Working on Hope & Dreams Of Sleep (T-T).
+                try:
+                    sleep(0.1)
+                except KeyboardInterrupt:
+                    sleep(0.1)
+
 #Main Function
 appdata_path = os.getenv("LOCALAPPDATA")
 # print(appdata_path)
@@ -146,51 +164,69 @@ settings_path = os.path.join(
 
 with open(settings_path) as f:
     data = json.load(f)
+    choice: int = 0
+    while(choice != 3):
+        try:
+            print("To Reset stored values Enter 0, And For Quitting Enter 3.")
+            choice = int(input("Enter '1' For SlideShow or '2' For Random Wallpaper :"))
+        except KeyboardInterrupt:
+            #You Can Quit This Way, But There is a Chance of Having an Error Shown In Screen/Display.
+            print("\nPlease Quit Program Using The Standard Way..")
+            choice = 3
 
-choice: int = 0
-while(choice != 3):
-    print("To Reset stored values Enter 0, And For Quitting Enter 3.")
-    choice = int(input("Enter '1' For SlideShow or '2' For Random Wallpaper :"))
-    match(choice):
-        case 0:
-            reset_json()
-            break
-        case 1:
-            choiceForSlide = int(input("Enter '1' if You Want The Slide To End Or '2' Repeat/Loop The Slide When The Slide Reaches End:"))
-            match(choiceForSlide):
-                case 1:
-                    slideshow(False)
+        match(choice):
+            case 0:
+                reset_json()
+                break
+            case 1:
+                try:
+                    choiceForSlide = int(input("Enter '1' if You Want The Slide To End Or '2' Repeat/Loop The Slide When The Slide Reaches End:"))
+                except KeyboardInterrupt:
+                    print("\n")
                     continue
-                case 2:
-                    RepeatedSlideShow()
+                match(choiceForSlide):
+                    case 1:
+                        try:
+                            slideshow(False)
+                        except KeyboardInterrupt:
+                            if keyboard.is_pressed('ctrl'):
+                                continue
+                        continue
+                    case 2:
+                        RepeatedSlideShow()
+                        continue
+                    case _:
+                        print("Wrong Input Choice ^w^")
+                        continue
+            case 2:
+                try:
+                    choiceForRand = int(input("Enter '1' For Opening Terminal with a Random Wallpaper or '2' For Random Background every Time You Open Terminal:"))
+                except KeyboardInterrupt:
+                    print("\n")
                     continue
-                case _:
-                    print("Wrong Input Choice ^w^")
-                    continue
-        case 2:
-            choiceForRand = int(input("Enter '1' For Opening Terminal with a Random Wallpaper or '2' For Random Background every Time You Open Terminal:"))
-            match(choiceForRand):
-                case 1:
-                    rand_popup_background()
-                    continue
-                case 2:
-                    rand_when_opend_background()
-                    continue
-                case _:
-                    print("Wrong Input Choice -_-")
-                    continue
-        case 3:
-            print("Quitting :3")
-            break
-        case _:
-            print("You Have Enterned A Wrong Choice >v<")
-            continue
+                match(choiceForRand):
+                    case 1:
+                        rand_popup_background()
+                        continue
+                    case 2:
+                        rand_when_opend_background()
+                        continue
+                    case _:
+                        print("Wrong Input Choice -_-")
+                        continue
+            case 3:
+                print("Quitting :3")
+                break
+            case _:
+                print("You Have Enterned A Wrong Choice >v<")
+                continue
+
 #TASKS:
-# Add LoopedSlideShow or RepeatedSlideShow.
 # Understand about Textual for TUI.
 
 #OPTIONAL:
 # We Can Add File Explorer like Sorting
+# Find A Better Way Of Heandling Instead Of Try and Except.
 
 #Done Tasks:
 # Make The Program Recursive or Don't Exit When A Task Is Done. (i.e. Slideshow, RandomSlide) (x)
@@ -198,3 +234,4 @@ while(choice != 3):
 # Now Make a Program when you open the terminal the wallpaper changes. (x)
 # There settings.json file is not being recogined. (x)
 # Add Reset json Key or action For store.json. (x)
+# Add LoopedSlideShow or RepeatedSlideShow. (x)

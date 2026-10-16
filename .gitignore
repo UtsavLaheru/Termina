@@ -1,1 +1,5 @@
+# Ignore This Files. :)
 .mypy_cache
+build/
+Releases/
+Export.bat
