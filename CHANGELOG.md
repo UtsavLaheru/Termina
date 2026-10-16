@@ -3,7 +3,7 @@ All The Changes like Added, Fixed, Removed, Changed will be documented in this f
 
 ## 0.0.2_alpha
 ### Added:
- - Now, We Can Go Back From Anywhere to Start Using Ctrl + c and The Program Will Not Close.
+ - Now, Users Can Go Back From Anywhere to Start Using Ctrl + c and The Program Will Not Close.
 ### Fixed:
  - Less or No Errors Show While Exiting The Program.
  - Can Exit The SlideShow with Ctrl + c Without any Errors.
